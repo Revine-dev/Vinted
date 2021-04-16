@@ -29,6 +29,6 @@ app.all("*", function (req, res) {
   fn.notFound(res);
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server started");
 });

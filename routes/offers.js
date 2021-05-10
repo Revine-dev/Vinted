@@ -4,6 +4,26 @@ const fn = require("../middlewares/functions");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
 const Offer = require("../models/offer");
+const User = require("../models/users");
+
+router.get("/offers/my", isAuthenticated, async (req, res) => {
+  try {
+    const token = req.headers.authorization.replace(/^Bearer /, "");
+    const user = await User.findOne({ token }, { _id: 1 });
+    if (!user) {
+      return res.status(200).json([]);
+    }
+    const offers = await Offer.find({ owner: user._id }).populate("account");
+    return res.json(offers);
+  } catch (error) {
+    if (error.message.match(/^Cast to ObjectId failed for value/)) {
+      return res.status(200).json([]);
+    }
+
+    console.log(error.message);
+    return res.status(400).json({ error: "API Error" });
+  }
+});
 
 router.get("/offers/", async (req, res) => {
   const filters = {},

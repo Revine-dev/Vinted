@@ -6,6 +6,7 @@ const encBase64 = require("crypto-js/enc-base64");
 const uid2 = require("uid2");
 
 const User = require("../models/users");
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 router.post("/users/signup", async (req, res) => {
   const { email, username, phone, password } = req.fields;
@@ -78,6 +79,24 @@ router.post("/users/login", async (req, res) => {
     }
   }
   fn.accesDenied(res);
+});
+
+router.get("/user/account", isAuthenticated, async (req, res) => {
+  try {
+    const token = req.headers.authorization.replace(/^Bearer /, "");
+    const user = await User.findOne({ token });
+    if (!user) {
+      return res.status(401).json({ error: "User not found" });
+    }
+    return res.json({
+      _id: user._id,
+      email: user.email,
+      account: user.account,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.json("API error");
+  }
 });
 
 module.exports = router;

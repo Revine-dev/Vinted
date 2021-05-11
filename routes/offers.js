@@ -61,7 +61,7 @@ router.get("/offers/", async (req, res) => {
   }
 
   const totalResults = await Offer.countDocuments(filters);
-  let maxPages = Math.round(totalResults / fn.getOption("resultsPerPage"));
+  let maxPages = Math.ceil(totalResults / fn.getOption("resultsPerPage"));
   if (maxPages === 0) {
     maxPages += 1;
   }

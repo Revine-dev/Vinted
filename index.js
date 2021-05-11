@@ -17,9 +17,11 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 const signRoutes = require("./routes/sign");
 const offersRoutes = require("./routes/offers");
+const payRoutes = require("./routes/payment");
 
 app.use(signRoutes);
 app.use(offersRoutes);
+app.use(payRoutes);
 
 app.all("/", function (req, res) {
   res.json({ message: "Welcome to Vinted Application !" });

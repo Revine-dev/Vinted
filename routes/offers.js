@@ -100,7 +100,7 @@ router.get("/offer/:id", async (req, res) => {
       }
       const payment = await Payment.findOne({ offer });
 
-      return res.json({ offer, payment });
+      return res.json({ offer, sold: payment });
     } catch (error) {
       return fn.error(res, "Offer not found");
     }

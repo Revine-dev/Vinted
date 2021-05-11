@@ -19,6 +19,7 @@
     "express-formidable": "^1.2.0",
     "mailgun-js": "^0.22.0",
     "mongoose": "^5.12.3",
+    "stripe": "^8.148.0",
     "uid2": "0.0.3"
   }
 }

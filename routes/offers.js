@@ -4,6 +4,7 @@ const fn = require("../middlewares/functions");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
 const Offer = require("../models/offer");
+const Payment = require("../models/payments");
 
 router.get("/offers/my", isAuthenticated, async (req, res) => {
   try {
@@ -76,11 +77,14 @@ router.get("/offers/", async (req, res) => {
     .sort(sort)
     .skip(pagination.skip)
     .limit(pagination.limit);
+
+  const sold = await Payment.find().populate("offer");
   return res.json({
     nb: Object.keys(results).length,
     total: totalResults,
     pages: maxPages,
     data: results,
+    sold: sold,
   });
 });
 
@@ -94,7 +98,9 @@ router.get("/offer/:id", async (req, res) => {
       if (!offer) {
         return fn.error(res, "Offer not found");
       }
-      return res.json(offer);
+      const payment = await Payment.findOne({ offer });
+
+      return res.json({ offer, payment });
     } catch (error) {
       return fn.error(res, "Offer not found");
     }
